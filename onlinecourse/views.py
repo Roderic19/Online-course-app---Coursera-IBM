@@ -118,7 +118,7 @@ def submit(request, course_id):
     answers = extract_answers(request)
     submission.choices.add(*answers)
     submission.save()
-    return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course_id, submission_id,)))
+    return HttpResponseRedirect(reverse(viewname='onlinecourse:show_exam_result', args=(course_id, submission.id,)))
 
 
 
@@ -155,11 +155,11 @@ def show_exam_result(request, course_id, submission_id):
             current_grade += question.grade
     
     total_points = sum([question.grade for question in questions])
-    grade_percentage = (current_grade/total)*100
+    score = (current_grade/total_points)*100
 
     context['course'] = course
     context['choices'] = choices
-    context['gradePercentage'] = grade_percentage
+    context['score'] = score
     return render(request, 'onlinecourse/exam_result_bootstrap.html', context)
 
 
